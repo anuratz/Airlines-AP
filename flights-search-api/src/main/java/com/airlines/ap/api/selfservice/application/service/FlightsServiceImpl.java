@@ -56,5 +56,10 @@ public class FlightsServiceImpl implements IFlightsService {
 		return scheduleRepository.createFlightSchedule(schedule);
 	}
 
+	@Override
+	public FlightDetails getFlightbyFlightCode(String flightCode) {
+		return detailRepository.getFlightByFlightcode(flightCode);
+	}
+
 
 }

@@ -10,12 +10,12 @@ public class AirlineDetailsSpecification {
 
 	public static Specification<Airlines> airlineNameLike(String airlineName) {
 		return (root, query, builder) -> airlineName == null ? builder.conjunction()
-				: builder.equal(builder.upper(root.get("airlineName")), "%" + airlineName.toUpperCase() + "%");
+				: builder.like(builder.upper(root.get("airlineName")), "%" + airlineName.toUpperCase() + "%");
 	}
 
 	public static Specification<Airlines> airlineCodeEquals(String airlineCode) {
 		return (root, query, builder) -> airlineCode == null ? builder.conjunction()
-				: builder.equal(builder.upper(root.get("airlineCode")), "%" + airlineCode.toUpperCase() + "%");
+				: builder.like(builder.upper(root.get("airlineCode")), "%" + airlineCode.toUpperCase() + "%");
 	}
 
 }

@@ -18,6 +18,8 @@ public interface IFlightDetailRepository {
 		
 	@Query(nativeQuery=true,value="Select * from AP.Airlines")
 	public List<Airlines> getAirlinesDetails();
+
+	public FlightDetails getFlightByFlightcode(String flightCode);
 	
 
 }

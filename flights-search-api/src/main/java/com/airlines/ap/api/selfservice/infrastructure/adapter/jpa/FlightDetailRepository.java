@@ -1,6 +1,7 @@
 package com.airlines.ap.api.selfservice.infrastructure.adapter.jpa;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.airlines.ap.api.selfservice.domain.FlightDetails;
 import com.airlines.ap.api.selfservice.domain.spi.IFlightDetailRepository;
+import com.airlines.ap.api.selfservice.infrastructure.adapter.rest.util.exception.NotFoundException;
 
 public interface FlightDetailRepository extends CrudRepository<FlightDetails, String>,
 		JpaSpecificationExecutor<FlightDetails>, IFlightDetailRepository {
@@ -24,7 +26,7 @@ public interface FlightDetailRepository extends CrudRepository<FlightDetails, St
 	public default List<FlightDetails> getFlightDetail(String flightName, String flightCode, Integer airlineId) {
 		Specification<FlightDetails> spec = Specification.where(null);
 		var flightNameSpec = FlightDetailSpecification.flightNameLike(flightName);
-		var flightCodeSpec = FlightDetailSpecification.flightCodeEquals(flightCode);
+		var flightCodeSpec = FlightDetailSpecification.flightCodeLike(flightCode);
 		var airlineIdSpec = FlightDetailSpecification.airlineIdEquals(airlineId);
 		if (!StringUtils.isBlank(flightName)) {
 			System.out.println("inside:::");
@@ -38,5 +40,22 @@ public interface FlightDetailRepository extends CrudRepository<FlightDetails, St
 		}
 		var flights = this.findAll(spec);
 		return flights;
+	}
+	
+	
+	public default FlightDetails getFlightByFlightcode(String flightCode) {
+		Specification<FlightDetails> spec = Specification.where(null);
+		var flightCodeSpec = FlightDetailSpecification.flightCodeEquals(flightCode);
+		if (!StringUtils.isBlank(flightCode)) {
+			spec = spec.and(flightCodeSpec);
+		}
+		Optional<FlightDetails> flight = this.findOne(spec);
+		if(flight.isPresent()) {
+				return flight.get();
+		}
+		else {
+			throw new NotFoundException("Not found");
+		}
+		
 	}
 }

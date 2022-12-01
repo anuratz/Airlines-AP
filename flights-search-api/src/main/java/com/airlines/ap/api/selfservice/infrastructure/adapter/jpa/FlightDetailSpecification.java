@@ -10,12 +10,17 @@ public class FlightDetailSpecification {
 
 	public static Specification<FlightDetails> flightNameLike(String flightName) {
 		return (root, query, builder) -> flightName == null ? builder.conjunction()
-				: builder.equal(builder.upper(root.get("flightName")),"%"+ flightName.toUpperCase()+"%");
+				: builder.like(builder.upper(root.get("flightName")),"%"+ flightName.toUpperCase()+"%");
 	}
 
+	public static Specification<FlightDetails> flightCodeLike(String flightCode) {
+		return (root, query, builder) -> flightCode == null ? builder.conjunction()
+				: builder.like(builder.upper(root.get("flightCode")),"%"+flightCode.toUpperCase()+"%");
+	}
+	
 	public static Specification<FlightDetails> flightCodeEquals(String flightCode) {
 		return (root, query, builder) -> flightCode == null ? builder.conjunction()
-				: builder.equal(builder.upper(root.get("flightCode")),"%"+flightCode.toUpperCase()+"%");
+				: builder.like(builder.upper(root.get("flightCode")),"%"+flightCode.toUpperCase()+"%");
 	}
 
 	public static Specification<FlightDetails> airlineIdEquals(Integer airlineId) {

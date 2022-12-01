@@ -17,6 +17,8 @@ public interface IFlightsService {
 	FlightDetails createFlightDetails(FlightDetails flightDetails);
 
 	FlightSchedule createScheduleDetails(FlightSchedule flightDetails);
+
+	FlightDetails getFlightbyFlightCode(String flightCode);
 	
 	
 

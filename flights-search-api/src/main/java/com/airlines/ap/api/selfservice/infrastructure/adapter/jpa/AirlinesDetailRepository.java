@@ -29,6 +29,7 @@ public interface AirlinesDetailRepository extends CrudRepository<Airlines, Strin
 			spec = spec.and(airlineCodeSpec);
 		}
 		var airlines = this.findAll(spec);
+		System.out.println("airline Det:"+ airlines.size());
 		return airlines;
 	}
 }

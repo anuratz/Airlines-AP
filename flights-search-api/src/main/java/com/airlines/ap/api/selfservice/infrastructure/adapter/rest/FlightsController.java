@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +23,7 @@ import com.airlines.ap.api.selfservice.infrastructure.adapter.rest.model.CreateF
 import com.airlines.ap.api.selfservice.infrastructure.adapter.rest.model.CreateFlightScheduleRequest;
 import com.airlines.ap.api.selfservice.infrastructure.adapter.rest.model.CreateFlightScheduleResponse;
 import com.airlines.ap.api.selfservice.infrastructure.adapter.rest.util.exception.ConflictException;
+import com.airlines.ap.api.selfservice.infrastructure.adapter.rest.util.exception.NotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.log4j.Log4j2;
@@ -56,6 +55,14 @@ public class FlightsController {
 	@PostMapping
 	public ResponseEntity<CreateFlightDetailResponse> createFlightEntry(@RequestBody CreateFlightDetailRequest request) {
 		var flightDetails = mapper.mapFlightRequest(request);
+		try {
+			var existing = flightService.getFlightbyFlightCode(request.getFlightCode());
+			if (existing != null) {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body(mapper.mapFlightResponse(existing));
+			}
+		} catch (NotFoundException e) {
+			log.info("No flight of flight code gicen exists");
+		}
 		var response = flightService.createFlightDetails(flightDetails);
 		return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapFlightResponse(response));
 	}
